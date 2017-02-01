@@ -8,9 +8,9 @@ import json
 
 import requests
 
-from .configuration_file import ConfigurationFile
-from .inventory import Inventory
-from .credentials import Credentials
+from .utilities.configuration_file import ConfigurationFile
+from .em_modules.inventory import Inventory
+from .em_modules.credentials import Credentials
 
 logger = logging.getLogger(__name__)
 

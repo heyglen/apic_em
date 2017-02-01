@@ -2,7 +2,7 @@
 
 import requests
 
-from .log_setup import log_setup
+from .utilities.log_setup import log_setup
 
 log_setup()
 
