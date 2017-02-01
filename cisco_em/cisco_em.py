@@ -60,13 +60,18 @@ class CiscoEM(object):
 
     def _get_device(self, device_dict):
         class Device(namedtuple('Device', device_dict.keys())):
+            def __str__(self):
+                return self.hostname
+
             def __repr__(self):
                 attributes = list()
                 for key in device_dict:
-                    attributes.append('='.join([
-                        key,
-                        getattr(self, key)
-                    ]))
+                    value = getattr(self, key)
+                    if value is not None:
+                        attributes.append('='.join([
+                            key,
+                            str(value)
+                        ]))
                 return '<Device {}>'.format(
                     ','.join(attributes)
                 )
@@ -74,7 +79,7 @@ class CiscoEM(object):
         return device
 
     @property
-    def topology(self):
+    def devices(self):
         url = '/'.join([self.url, 'network-device'])
         response = requests.get(
             url,
@@ -83,7 +88,9 @@ class CiscoEM(object):
         )
         data = response.json()['response']
         devices = list()
-        logger.debug(data[0].keys())
         for device_dict in data:
-            devices.append(self._get_device(device_dict))
+            value = self._get_device(device_dict)
+            print(value)
+            if value is not None:
+                devices.append(value)
         return devices

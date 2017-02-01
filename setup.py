@@ -32,7 +32,7 @@ setup(
                  'cisco_em'},
     entry_points={
         'console_scripts': [
-            'cisco_em=cisco_em.cli:main'
+            'cisco_em=cisco_em.cli:commands'
         ]
     },
     include_package_data=True,
