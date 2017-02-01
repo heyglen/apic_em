@@ -9,13 +9,13 @@ import json
 import requests
 
 from .utilities.configuration_file import ConfigurationFile
-from .em_modules.inventory import Inventory
+from .em_modules.devices import Devices
 from .em_modules.credentials import Credentials
 
 logger = logging.getLogger(__name__)
 
 
-class CiscoEM(object):
+class ApicEM(object):
     _default_header = {"Content-Type": "application/json"}
 
     def __init__(self, username=None, password=None, hostname=None, verify=None):
@@ -42,7 +42,7 @@ class CiscoEM(object):
 
     def _get_config(self, section, value):
         if not hasattr(self, '_config_file'):
-            config_file = str(pathlib.Path().home() / '.cisco_emrc')
+            config_file = str(pathlib.Path().home() / '.apic_emrc')
             self._config_file = ConfigurationFile.get(config_file)
         section = self._config_file.get(section)
         if section is not None:
@@ -66,10 +66,10 @@ class CiscoEM(object):
         return ticket
 
     @property
-    def inventory(self):
-        if not hasattr(self, '_inventory'):
-            self._inventory = Inventory(self)
-        return self._inventory
+    def devices(self):
+        if not hasattr(self, '_devices'):
+            self._devices = Devices(self)
+        return self._devices
 
     @property
     def credentials(self):

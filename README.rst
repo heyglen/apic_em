@@ -1,21 +1,23 @@
 ===============================
-Cisco-EM
+Apic-EM
 ===============================
+
+Pythonic wrapper to the Apic-EM REST API
 
 Python API
 
 .. code-block:: python
 ::
 
-    from cisco_em import CiscoEM
+    from apic_em import ApicEM
 
-    manager = CiscoEM(
+    manager = ApicEM(
         username='user',
         password='pass',
         hostname='127.0.0.1',
     )
 
-    for device in manager.inventory.devices:
+    for device in manager.devices.list():
         print(device.hostname)
 
     for credential in manager.credentials.list(credential_type='CLI'):
@@ -27,12 +29,12 @@ Command Line
 .. code-block:: shell
 ::
 
-    $ cisco_em devices
+    $ apic_em devices
     hostname01
     hostname02
     hostname03
 
-    $ cisco_em credentials
+    $ apic_em credentials
     admin
     root
     ...
@@ -45,7 +47,7 @@ Config File
 ::
 
     cd $HOME
-    vim .cisco_emrc
+    vim .apic_emrc
 
 .. code-block:: ini
 ::

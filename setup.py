@@ -20,26 +20,26 @@ test_requirements = [
 ]
 
 setup(
-    name='cisco_em',
+    name='apic_em',
     version='0.1.0',
     description="Project",
     long_description=readme + '\n\n' + history,
     author="Glen Harmon",
     author_email='ghar@nnit.com',
-    url='https://github.com/heyglen/cisco_em',
+    url='https://github.com/heyglen/apic_em',
     packages=find_packages(exclude=['contrib', u'docs', u'tests']),
-    package_dir={'cisco_em':
-                 'cisco_em'},
+    package_dir={'apic_em':
+                 'apic_em'},
     entry_points={
         'console_scripts': [
-            'cisco_em=cisco_em.cli:commands'
+            'apic_em=apic_em.cli:commands'
         ]
     },
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='cisco_em',
+    keywords='apic_em',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

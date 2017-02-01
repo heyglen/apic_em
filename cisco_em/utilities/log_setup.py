@@ -21,7 +21,7 @@ def log_setup():
         style='%'
     )
 
-    logger = logging.getLogger('cisco_em')
+    logger = logging.getLogger('apic_em')
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(verbose_formatter)

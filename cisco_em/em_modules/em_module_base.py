@@ -4,10 +4,10 @@ from collections import namedtuple
 
 
 class EmModuleBase(object):
-    def __init__(self, cisco_em):
-        self._cisco_em = cisco_em
-        self._headers = cisco_em._headers
-        self._url = cisco_em._url
+    def __init__(self, apic_em):
+        self._apic_em = apic_em
+        self._headers = apic_em._headers
+        self._url = apic_em._url
 
     def _build(self, object_name, object_dict, display=None):
         display = display or object_name

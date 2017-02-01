@@ -8,7 +8,7 @@ log_setup()
 
 requests.packages.urllib3.disable_warnings()
 
-from .cisco_em import CiscoEM
+from .apic_em import ApicEM
 
 __author__ = """Glen Harmon"""
 __email__ = 'ghar@nnit.com'
