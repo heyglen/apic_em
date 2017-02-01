@@ -4,8 +4,9 @@ Cisco-EM
 
 Project
 
-.. highlight:: python
+.. code-block:: python
 ::
+
     from cisco_em import CiscoEM
 
     manager = CiscoEM(
@@ -18,8 +19,9 @@ Project
         print(device.hostname)
 
 
-.. highlight:: shell
+.. code-block:: shell
 ::
+
     $ cisco_em devices
     hostname01
     hostname02
@@ -31,4 +33,3 @@ Features
 --------
 
 * TODO
-
