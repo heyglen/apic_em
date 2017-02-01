@@ -49,6 +49,7 @@ Config File
 
 .. code-block:: ini
 ::
+
     [system]
     hostname = 127.0.0.1
 
