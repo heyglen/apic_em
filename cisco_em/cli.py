@@ -15,6 +15,12 @@ commands = click.Group('cisco_em', context_settings=CONTEXT_SETTINGS, no_args_is
 @commands.command()
 @click.pass_context
 def devices(ctx):
-    """Console script for cisco_em"""
-    for node in ctx.obj.devices:
+    for node in ctx.obj.inventory.devices:
         click.echo(node)
+
+
+@commands.command()
+@click.pass_context
+def credentials(ctx):
+    for credential in ctx.obj.credentials.list():
+        click.echo(credential)

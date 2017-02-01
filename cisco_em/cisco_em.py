@@ -4,32 +4,41 @@
 import pathlib
 
 import logging
-from collections import namedtuple
 import json
 
 import requests
 
 from .configuration_file import ConfigurationFile
+from .inventory import Inventory
+from .credentials import Credentials
 
 logger = logging.getLogger(__name__)
 
 
 class CiscoEM(object):
-    _default_header = {"content-type": "application/json"}
+    _default_header = {"Content-Type": "application/json"}
 
-    def __init__(self, username=None, password=None, hostname=None):
-        self.username = username or self._get_config('credentials', 'username')
-        self.password = password or self._get_config('credentials', 'password')
+    def __init__(self, username=None, password=None, hostname=None, verify=None):
+        username = username or self._get_config('credentials', 'username')
+        password = password or self._get_config('credentials', 'password')
         hostname = hostname or self._get_config('system', 'hostname')
-        self.url = 'https://{}'.format(
+        self._url = 'https://{}'.format(
             '/'.join([
                 hostname,
                 'api',
                 'v1',
             ])
         )
-        self._header = self._default_header.copy()
-        self._get_ticket()
+        if verify is None:
+            verify = self._get_config('security', 'verify') == 'true'
+        if verify is None:
+            verify = True
+        headers = self._default_header.copy()
+        headers['X-Auth-Token'] = self._get_ticket(username, password, verify)
+        self._headers = {
+            'verify': verify,
+            'headers': headers,
+        }
 
     def _get_config(self, section, value):
         if not hasattr(self, '_config_file'):
@@ -39,58 +48,31 @@ class CiscoEM(object):
         if section is not None:
             return section.get(value)
 
-    def _get_ticket(self):
-        if not self._header.get('X-Auth-Token'):
-            body = dict(
-                username=self.username,
-                password=self.password,
-            )
-            response = requests.post(
-                '/'.join([self.url, 'ticket']),
-                headers=self._header,
-                data=json.dumps(body),
-                verify=False,
-            )
-            data = response.json()
-            ticket = data['response']['serviceTicket']
-            logger.debug('ticket: {}'.format(ticket))
-            self._header.update({
-                'X-Auth-Token': ticket,
-            })
-
-    def _get_device(self, device_dict):
-        class Device(namedtuple('Device', device_dict.keys())):
-            def __str__(self):
-                return self.hostname
-
-            def __repr__(self):
-                attributes = list()
-                for key in device_dict:
-                    value = getattr(self, key)
-                    if value is not None:
-                        attributes.append('='.join([
-                            key,
-                            str(value)
-                        ]))
-                return '<Device {}>'.format(
-                    ','.join(attributes)
-                )
-        device = Device(**device_dict)
-        return device
+    def _get_ticket(self, username, password, verify):
+        body = dict(
+            username=username,
+            password=password,
+        )
+        url = '/'.join([self._url, 'ticket'])
+        response = requests.post(
+            url,
+            data=json.dumps(body),
+            headers=self._default_header,
+            verify=verify,
+        )
+        data = response.json()
+        ticket = data['response']['serviceTicket']
+        logger.debug('Got ticket')
+        return ticket
 
     @property
-    def devices(self):
-        url = '/'.join([self.url, 'network-device'])
-        response = requests.get(
-            url,
-            headers=self._header,
-            verify=False,
-        )
-        data = response.json()['response']
-        devices = list()
-        for device_dict in data:
-            value = self._get_device(device_dict)
-            print(value)
-            if value is not None:
-                devices.append(value)
-        return devices
+    def inventory(self):
+        if not hasattr(self, '_inventory'):
+            self._inventory = Inventory(self)
+        return self._inventory
+
+    @property
+    def credentials(self):
+        if not hasattr(self, '_credentials'):
+            self._credentials = Credentials(self)
+        return self._credentials

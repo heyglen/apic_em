@@ -2,7 +2,7 @@
 Cisco-EM
 ===============================
 
-Project
+Python API
 
 .. code-block:: python
 ::
@@ -15,9 +15,14 @@ Project
         hostname='127.0.0.1',
     )
 
-    for device in manager.devices:
+    for device in manager.inventory.devices:
         print(device.hostname)
 
+    for credential in manager.credentials.list(credential_type='CLI'):
+        print(credential.username)
+
+
+Command Line
 
 .. code-block:: shell
 ::
@@ -26,10 +31,27 @@ Project
     hostname01
     hostname02
     hostname03
+
+    $ cisco_em credentials
+    admin
+    root
     ...
 
 
-Features
---------
+Config File
+-----------
 
-* TODO
+.. code-block:: shell
+::
+
+    cd $HOME
+    vim .cisco_emrc
+
+.. code-block:: ini
+::
+    [system]
+    hostname = 127.0.0.1
+
+    [credentials]
+    username = user
+    password = pass
