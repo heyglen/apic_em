@@ -58,3 +58,11 @@ Config File
     [credentials]
     username = user
     password = pass
+
+
+Install
+-------
+
+.. code-block:: shell
+::
+    pip3 install git+https://github.com/heyglen/apic_em.git
